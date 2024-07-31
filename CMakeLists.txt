@@ -385,8 +385,7 @@ if(WIN32)
   # support)
   if(ZMQ_WIN32_WINNT GREATER "0x05FF"
      AND MSVC_VERSION GREATER 1799
-     AND POLLER STREQUAL ""
-     AND NOT ZMQ_HAVE_WINDOWS_UWP)
+     AND POLLER STREQUAL "")
     set(POLLER "epoll")
   endif()
 
