@@ -325,7 +325,6 @@ set(POLLER
 if(WIN32)
   if(CMAKE_SYSTEM_NAME STREQUAL "WindowsStore" AND CMAKE_SYSTEM_VERSION MATCHES "^10.0")
     set(ZMQ_HAVE_WINDOWS_UWP ON)
-    set(ZMQ_HAVE_IPC OFF)
     # to remove compile warninging "D9002 ignoring unknown option"
     string(REPLACE "/Zi" "" CMAKE_CXX_FLAGS_DEBUG ${CMAKE_CXX_FLAGS_DEBUG})
     set(CMAKE_CXX_FLAGS_DEBUG
@@ -386,8 +385,7 @@ if(WIN32)
   # support)
   if(ZMQ_WIN32_WINNT GREATER "0x05FF"
      AND MSVC_VERSION GREATER 1799
-     AND POLLER STREQUAL ""
-     AND NOT ZMQ_HAVE_WINDOWS_UWP)
+     AND POLLER STREQUAL "")
     set(POLLER "epoll")
   endif()
 
@@ -509,8 +507,9 @@ if(NOT WIN32)
   set(ZMQ_HAVE_IPC 1)
   set(ZMQ_HAVE_STRUCT_SOCKADDR_UN 1)
 else()
-  check_include_files("winsock2.h;afunix.h" ZMQ_HAVE_IPC)
-  if(ZMQ_HAVE_IPC)
+  check_include_files("winsock2.h;afunix.h" ZMQ_FOUND_AFUNIX_HEADER)
+  if(ZMQ_FOUND_AFUNIX_HEADER)
+    set(ZMQ_HAVE_IPC 1)
     check_struct_has_member("struct sockaddr_un" sun_path "winsock2.h;afunix.h" ZMQ_HAVE_STRUCT_SOCKADDR_UN)
   endif()
 endif()
